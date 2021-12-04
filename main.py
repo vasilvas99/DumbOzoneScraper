@@ -40,6 +40,7 @@ class ConsoleNotification(Action):
 
 
 class ScraperRunner:
+    # TODO: add dynamic module (both scrapers and notifications) loading from a json file
     def __init__(self):
         self.__loop = asyncio.get_event_loop()
         self.__scrapers = []
