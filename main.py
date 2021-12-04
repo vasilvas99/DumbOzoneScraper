@@ -1,6 +1,11 @@
 from bs4 import BeautifulSoup
 import aiohttp
 import asyncio
+from cachetools import TTLCache
+from datetime import timedelta, datetime
+from time import sleep
+
+MAXCACHED = 100
 
 
 class Scraper:
@@ -30,12 +35,12 @@ class OzoneScraper(Scraper):
 
 
 class ConsoleNotification(Action):
-    def __init__(self):
-        self.notified = {"product_url": False}
+    def __init__(self, TTL=timedelta(seconds=10)):
+        self.notified = TTLCache(maxsize=MAXCACHED, ttl=TTL, timer=datetime.now)
 
     async def take_action(self, url):
         if not self.notified.get(url):
-            print(f'Product now available @ {url}')
+            print(f'{datetime.now()}: Product now available @ {url}')
             self.notified[url] = True
 
 
